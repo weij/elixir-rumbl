@@ -3,14 +3,11 @@ defmodule Rumbl.UserController do
   alias Rumbl.Repo
   alias Rumbl.User
 
+  plug :authenticate when action in [:index, :show]
+
   def index(conn, _param) do
-    case authenticate(conn) do
-      %Plug.Conn{halted: true} ->
-        conn
-      _ ->
-        users = Repo.all(User) 
-        render conn, "index.html", users: users 
-    end
+    users = Repo.all(User) 
+    render conn, "index.html", users: users 
   end
 
   def show(conn, %{"id" => id}) do
@@ -36,7 +33,7 @@ defmodule Rumbl.UserController do
     end
   end
 
-  defp authenticate(conn) do
+  defp authenticate(conn, _opts) do
     if conn.assigns.current_user do
       conn
     else
