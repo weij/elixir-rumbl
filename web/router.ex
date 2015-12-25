@@ -21,6 +21,9 @@ defmodule Rumbl.Router do
       only: [:index, :show, :create, :new]
     resources "/sessions", SessionController,
       only: [:create, :new, :delete]
+
+    resources "/videos", VideoController
+    
     get "/", PageController, :index
   end
 
