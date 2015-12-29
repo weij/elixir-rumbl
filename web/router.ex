@@ -21,7 +21,8 @@ defmodule Rumbl.Router do
       only: [:index, :show, :create, :new]
     resources "/sessions", SessionController,
       only: [:create, :new, :delete]
-
+    
+    get "/watch/:id", WatchController, :show
     get "/", PageController, :index
   end
 
