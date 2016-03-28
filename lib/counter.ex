@@ -1,33 +1,46 @@
 defmodule Rumbl.Counter do
+  use GenServer
+
   def inc(pid) do
-    send(pid, :inc)  
+    GenServer.cast(pid, :inc)
   end
-
+  
   def dec(pid) do
-    send(pid, :dec)
+    GenServer.cast(pid, :dec)
   end
 
-  def val(pid, timeout \\ 5000) do
-    ref = make_ref()
-    send(pid, {:val, self(), ref})
+  def val(pid) do
+    GenServer.call(pid, :val)
+  end
 
-    receive do
-      {^ref, val} -> val
-    after timeout -> exit(:timeout)
-    end
+  def init(initial_val) do
+    Process.send_after(self, :tick, 1000)
+    {:ok, initial_val}
   end
 
   def start_link(initial_val) do
-    {:ok, spawn_link(fn -> listen(initial_val) end)}
+    GenServer.start_link(__MODULE__, initial_val)
   end
 
-  defp listen(val) do
-    receive do
-      :inc -> listen(val + 1)
-      :dec -> listen(val - 1)
-      {:val, sender, ref} ->
-        send sender, {ref, val}
-        listen(val)
-    end
+  def handle_info(:tick, val) when val <= 0, do: raise "boom!"
+
+
+  def handle_info(:tick, val) do
+    IO.puts "tick #{val}"
+    Process.send_after(self, :tick, 1000)
+    {:noreply, val - 1}
   end
+
+  def handle_cast(:inc, value) do
+    {:noreply, value + 1}
+  end
+
+  def handle_cast(:dec, value) do
+    {:noreply, value - 1}
+  end
+
+  def handle_call(:val, _from, value) do
+    {:reply, value, value}
+  end
+
 end
