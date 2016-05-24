@@ -3,8 +3,8 @@ defmodule Rumbl.Mixfile do
 
   def project do
     [app: :rumbl,
-     version: "0.0.2",
-     elixir: "~> 1.0",
+     version: "0.0.3",
+     elixir: "~> 1.2",
      elixirc_paths: elixirc_paths(Mix.env),
      compilers: [:phoenix, :gettext] ++ Mix.compilers,
      build_embedded: Mix.env == :prod,
@@ -30,7 +30,7 @@ defmodule Rumbl.Mixfile do
   #
   # Type `mix help deps` for examples and options.
   defp deps do
-    [{:phoenix, "~> 1.1.0"},
+    [{:phoenix, "~> 1.1.2"},
      {:phoenix_ecto, "~> 2.0"},
      {:postgrex, ">= 0.11.0"},
      {:phoenix_html, "~> 2.3"},
